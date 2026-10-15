@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+!.env.example
+/.test-runtime/
+/pocketbase/pb_data/
+/pocketbase/pocketbase.exe
+/test-results/
+/.local/

@@ -12,7 +12,15 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    ".test-runtime/**",
+    "pocketbase/pb_data/**",
+    "test-results/**",
   ]),
+  { rules: { "@next/next/no-img-element": "off" } },
+  {
+    files: ["pocketbase/pb_migrations/*.js"],
+    rules: { "@typescript-eslint/triple-slash-reference": "off" },
+  },
 ]);
 
 export default eslintConfig;

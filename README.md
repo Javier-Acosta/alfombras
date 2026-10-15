@@ -1,36 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Fábrica de Alfombras Catamarca
 
-## Getting Started
+Sitio institucional basado en Feria del Libro, con La fábrica, Proceso artesanal, Colecciones, Noticias e Instagram. La sección Tienda conserva la presentación de Tienda Cata y permite preparar pedidos por WhatsApp. Pago y entrega se coordinan manualmente.
 
-First, run the development server:
+## Desarrollo local
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Requiere Node.js 24 y PocketBase 0.40.4. Ejecutar `npm ci`. En Windows, colocar PocketBase en `pocketbase/pocketbase.exe` y ejecutar `node scripts/setup-local.mjs` una vez. Crea una base vacía y credenciales aleatorias en archivos excluidos de Git. Consultar el acceso en `.local/acceso.txt`.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Ejecutar `npm run dev` y abrir http://localhost:3000. El panel está en `/admin`. En próximos arranques, iniciar PocketBase con `./pocketbase/pocketbase.exe serve --http=127.0.0.1:8090 --dir=pocketbase/pb_data --migrationsDir=pocketbase/pb_migrations`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Para una instancia externa, seguir `.env.example` y [Administración](docs/administracion.md). Nunca reutilizar credenciales o bases de los proyectos de referencia.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Comprobaciones
 
-## Learn More
+- `npm run lint`
+- `npm run build`
+- `npm run test:unit`
+- `npm run test:e2e` (requiere el entorno descartable de pruebas)
 
-To learn more about Next.js, take a look at the following resources:
+Ver [Verificación](docs/verificacion.md), [Implementación](docs/implementacion.md) y [Despliegue](docs/despliegue.md).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## OpenSpec
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+La propuesta, requisitos, diseño y tareas están en `openspec/changes/fabrica-alfombras-catamarca/`. Para revisar el progreso: `npx openspec instructions apply --change fabrica-alfombras-catamarca --json`.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+La aplicación utiliza PocketBase independiente. Las credenciales, archivos de datos y resultados de prueba no se versionan. Los pedidos permanecen deshabilitados hasta configurar un WhatsApp comercial válido. No incluye cobro automático, logística ni reserva de stock.
