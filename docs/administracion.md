@@ -42,4 +42,8 @@ El cliente no necesita cuenta: arma el carrito, ingresa email y confirma. El ser
 
 Abrir WhatsApp no demuestra que se haya enviado el mensaje. Pago y entrega se coordinan manualmente; un pedido no reserva unidades ni se marca como pagado. El panel Pedidos muestra el resumen original aunque cambie el catálogo. Conservar el enlace privado del pedido como información de acceso; no compartirlo públicamente.
 
+En Pedidos, **Archivar pedido** retira un pedido de Pendientes y **Archivar todos los pendientes** vacía esa lista después de confirmar. Los registros se conservan en **Archivados**, con su referencia, contacto e importes originales. **Volver a pendientes** permite recuperarlos. Archivar no confirma pago ni entrega, no cambia el stock y conserva el enlace privado del cliente. Los pedidos nuevos aparecen en Pendientes y no se archivan automáticamente.
+
+En instancias externas, ejecutar `node --env-file=.env.local scripts/setup-order-archive.mjs URL_DE_POCKETBASE` para agregar el campo de archivo sin modificar registros ni permisos. Las instalaciones locales lo agregan mediante las migraciones de `pocketbase/pb_migrations`.
+
 El carrito se conserva en el mismo navegador. Productos despublicados se señalan como no disponibles y deben quitarse para continuar. Un catálogo vacío muestra “Todavía no hay productos publicados”; una caída de conexión muestra “No pudimos cargar el catálogo”.

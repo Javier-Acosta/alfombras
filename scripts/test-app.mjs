@@ -12,7 +12,14 @@ Object.assign(
 );
 const child = spawn(
   process.execPath,
-  ["node_modules/next/dist/bin/next", "dev", "-p", "3217"],
+  [
+    "node_modules/next/dist/bin/next",
+    "dev",
+    "--hostname",
+    "127.0.0.1",
+    "-p",
+    "3217",
+  ],
   { stdio: "inherit", env: process.env },
 );
 for (const signal of ["SIGINT", "SIGTERM"])
