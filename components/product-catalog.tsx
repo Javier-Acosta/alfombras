@@ -13,17 +13,21 @@ function freshToken() {
 export function ProductCatalog({
   products,
   selectedCollection,
+  selectedProduct,
   canOrder,
   serviceConfigured,
 }: {
   products: Product[];
   selectedCollection: string;
+  selectedProduct?: string;
   canOrder: boolean;
   serviceConfigured: boolean;
 }) {
   const [cart, setCart] = useState<CartLine[]>([]);
   const [loaded, setLoaded] = useState(false);
-  const [selected, setSelected] = useState<Product | null>(null);
+  const [selected, setSelected] = useState<Product | null>(
+    () => products.find((p) => p.id === selectedProduct) || null,
+  );
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [prices, setPrices] = useState<Record<string, number>>({});

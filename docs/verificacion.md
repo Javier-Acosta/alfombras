@@ -45,5 +45,9 @@ Para comparar las referencias, iniciar sus compilaciones existentes en los puert
 - Catálogo vacío y catálogo inaccesible diferenciados; archivos falsos o sobredimensionados rechazados sin reemplazar la imagen.
 - Cambios de configuración visibles al público y rechazo de un WhatsApp inválido.
 - Borradores, pedidos y alta de personal inaccesibles públicamente.
+- Archivo individual y masivo, recuperación de pedidos y conservación de sus datos.
+- Venta confirmada, entrega, cancelación y corrección de estados; filtros y resumen privado actualizados, rechazo de estados inválidos, solicitudes ajenas y cambios de importes.
+- PDF individual autenticado, con importes del pedido original, descarga desde Archivados, paginación de pedidos extensos y mensaje ante fallos. Verificar el texto con pypdf y renderizar las páginas con Poppler para revisar el diseño.
+- Informe de ventas confirmadas con total general, filtro inclusivo por fecha de pedido en horario de Argentina, límites abiertos, fechas inválidas y período vacío. Exclusión de otros estados y archivados, autenticación y ausencia de cambios en los registros.
 
 La validación no incluye cobros, envíos reales ni publicación de contenido institucional definitivo. Se requiere repetir la prueba comercial controlada con la configuración real antes del despliegue.

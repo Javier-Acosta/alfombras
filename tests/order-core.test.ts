@@ -1,5 +1,69 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { salesDateRange, saleInRange } from "../lib/sales-report.ts";
+
+test("el rango de ventas incluye ambos días completos en horario de Argentina", () => {
+  const range = salesDateRange("2026-10-15", "2026-10-15");
+  assert.equal(range.start, "2026-10-15T03:00:00.000Z");
+  assert.equal(range.end, "2026-10-16T02:59:59.999Z");
+  assert.equal(saleInRange("2026-10-15 02:59:59.999Z", range), false);
+  assert.equal(saleInRange("2026-10-15 03:00:00.000Z", range), true);
+  assert.equal(saleInRange("2026-10-16 02:59:59.999Z", range), true);
+  assert.equal(saleInRange("2026-10-16 03:00:00.000Z", range), false);
+  assert.equal(saleInRange("2026-10-01 00:00:00.000Z", salesDateRange()), true);
+  assert.equal(salesDateRange("", "2026-10-15").start, undefined);
+  assert.equal(salesDateRange("2026-10-15", "").end, undefined);
+  for (const [from, to] of [
+    ["2026-02-30", ""],
+    ["invalid", ""],
+    ["2026-10-16", "2026-10-15"],
+  ])
+    assert.throws(() => salesDateRange(from, to));
+});
+import { whatsappUrl } from "../lib/whatsapp.ts";
+
+test("WhatsApp incluye enlace y foto de cada alfombra con importes originales", () => {
+  const line = {
+    id: "abcdefghijklmno",
+    name: "Alfombra de llama",
+    quantity: 1,
+    unitPriceMinor: 300000000,
+    subtotalMinor: 300000000,
+  };
+  const url = whatsappUrl("5493834304620", {
+    reference: "FAC-PRUEBA",
+    email: "prueba@example.test",
+    totalMinor: 300000000,
+    items: [
+      {
+        ...line,
+        productUrl: "https://ejemplo.test/tienda?alfombra=abcdefghijklmno",
+        imageUrl: "https://imagenes.test/alfombra.jpg",
+      },
+      { ...line, name: "Sin foto", imageUrl: "javascript:alert(1)" },
+    ],
+  });
+  const message = new URL(url!).searchParams.get("text")!;
+  assert.ok(
+    message.includes(
+      "Ver alfombra: https://ejemplo.test/tienda?alfombra=abcdefghijklmno",
+    ),
+  );
+  assert.ok(message.includes("Foto: https://imagenes.test/alfombra.jpg"));
+  assert.ok(message.includes("3.000.000,00"));
+  assert.ok(message.includes("Sin foto"));
+  assert.ok(!message.includes("javascript:"));
+  assert.ok(!message.includes("undefined"));
+  assert.equal(
+    whatsappUrl("", {
+      reference: "test",
+      email: "test@example.test",
+      items: [],
+      totalMinor: 1,
+    }),
+    null,
+  );
+});
 import { parseCart, priceOrder } from "../lib/order-core.ts";
 import { sanitizeRichText } from "../lib/rich-text.ts";
 const id = "abcdefghijklmno";

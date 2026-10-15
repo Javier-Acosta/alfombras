@@ -103,7 +103,7 @@ export const collectionLabels: Record<string, string> = {
   banners: "Banner",
   institutional_pages: "La fábrica y proceso artesanal",
   collections: "Colecciones",
-  products: "Alfombras",
+  products: "Tienda",
 };
 export function isCollection(name: string) {
   return Object.hasOwn(definitions, name);

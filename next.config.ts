@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
   },
   cacheComponents: false,
   partialPrefetching: false,
+  outputFileTracingIncludes: {
+    "/api/admin/orders/*/pdf": ["./public/fonts/lato-regular.ttf"],
+    "/api/admin/orders/confirmed-report": ["./public/fonts/lato-regular.ttf"],
+  },
   async headers() {
     return [
       {

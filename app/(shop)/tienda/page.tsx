@@ -9,9 +9,10 @@ export const metadata = { title: "Tienda" };
 export default async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ coleccion?: string }>;
+  searchParams: Promise<{ coleccion?: string; alfombra?: string }>;
 }) {
-  const selected = (await searchParams).coleccion || "";
+  const query = await searchParams;
+  const selected = query.coleccion || "";
   const s = await getSiteSettings();
   let products: Product[] | null;
   let collections: Content[];
@@ -51,6 +52,7 @@ export default async function Page({
               imageUrl: fileUrl(p.collectionId, p.id, p.image),
             }))}
             selectedCollection={allowed}
+            selectedProduct={query.alfombra}
             canOrder={validWhatsapp(s.whatsapp)}
             serviceConfigured={Boolean(
               process.env.POCKETBASE_SUPERUSER_EMAIL &&

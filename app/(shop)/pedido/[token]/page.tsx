@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { privateOrder, whatsappUrl } from "@/lib/orders";
+import { privateOrder, whatsappUrl, orderMediaLinks } from "@/lib/orders";
 import { getSiteSettings } from "@/lib/settings";
 import { formatMoney } from "@/lib/money";
 import type { OrderLine } from "@/lib/order-core";
+import { isOrderStatus } from "@/lib/order-status";
 import styles from "../../shop.module.css";
 export const metadata = {
   title: "Resumen del pedido",
@@ -18,18 +19,26 @@ export default async function Page({
   const { token } = await params;
   const order = await privateOrder(token);
   if (!order) notFound();
+  const status = isOrderStatus(order.status) ? order.status : "pending";
+  const heading = {
+    pending: "Tu pedido está pendiente",
+    confirmed: "Tu pedido está confirmado",
+    delivered: "Tu pedido fue entregado",
+    cancelled: "Tu pedido fue cancelado",
+  }[status];
   const s = await getSiteSettings();
   const url = whatsappUrl(s.whatsapp, {
     reference: order.reference,
     email: order.email,
-    items: order.items,
+    items: await orderMediaLinks(order.items),
     totalMinor: order.totalMinor,
+    status,
   });
   return (
     <main id="contenido" className={styles.container}>
       <article className={styles.summary}>
         <p className={styles.brand}>Fábrica de Alfombras Catamarca</p>
-        <h1>Tu pedido está pendiente</h1>
+        <h1>{heading}</h1>
         <p>
           Referencia: <strong>{order.reference}</strong>
         </p>
@@ -43,8 +52,9 @@ export default async function Page({
         </ul>
         <strong>Total: {formatMoney(order.totalMinor)}</strong>
         <p className={styles.muted}>
-          Abrí WhatsApp y enviá el mensaje para coordinar el pago y la entrega.
-          Este pedido no reserva existencias ni confirma una compra pagada.
+          {status === "pending"
+            ? "Abrí WhatsApp y enviá el mensaje para coordinar el pago y la entrega. Este pedido no reserva existencias ni confirma una compra pagada."
+            : "Este es el estado registrado por la fábrica. Para consultas sobre el pedido, el pago o la entrega, contactanos por WhatsApp."}
         </p>
         {url ? (
           <a
@@ -53,7 +63,9 @@ export default async function Page({
             target="_blank"
             rel="noopener noreferrer"
           >
-            Continuar por WhatsApp ↗
+            {status === "pending"
+              ? "Continuar por WhatsApp ↗"
+              : "Consultar por WhatsApp ↗"}
           </a>
         ) : (
           <p className={styles.error}>

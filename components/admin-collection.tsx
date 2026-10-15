@@ -55,7 +55,11 @@ export function AdminCollection({ collection }: { collection: string }) {
   return (
     <>
       <div className="manager-title">
-        <h1>{collectionLabels[collection]}</h1>
+        <h1>
+          {collection === "products"
+            ? "Productos de la tienda"
+            : collectionLabels[collection]}
+        </h1>
         <button
           className="secondary"
           onClick={() => {

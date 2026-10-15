@@ -6,7 +6,7 @@ export default async function Page() {
   if (!pb) redirect("/admin/login");
   const orders = await pb.collection("orders").getFullList<AdminOrder>({
     sort: "-created",
-    fields: "id,reference,created,email,items,totalMinor,archived",
+    fields: "id,reference,created,email,items,totalMinor,archived,status",
   });
   return <AdminOrders orders={orders} />;
 }
