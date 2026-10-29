@@ -28,13 +28,25 @@ El superusuario se utiliza solo en servidor para los pedidos privados. El person
 
 ## Alfombras y colecciones
 
+### Mosaico del Home
+
+En **Mosaico → + Nuevo** se carga una foto propia (PNG, JPEG o WebP, hasta 5 MB) y se pega el **Enlace del diseño o colección**. Acepta enlaces completos del sitio publicado o de la vista local, y direcciones cortas como /alfombras o /lados-de-cama. Los enlaces antiguos por identificador de colección se convierten a su dirección actual. El destino debe estar publicado. El mosaico es independiente de Tienda y admite hasta nueve fotos publicadas. No se muestran títulos ni descripciones sobre las fotos. El título general de la sección sigue siendo configurable.
+
+Marcar **Publicar en el sitio** y guardar publica cada foto. La prioridad más alta aparece primero. Para sustituir una imagen cuando ya hay nueve, editar una existente o despublicar una antes de crear otra. En escritorio se muestran tres columnas y en celular dos. El mosaico sigue arriba de las colecciones; **Mostrar mosaico en el Home** controla toda la sección. Si el destino deja de estar publicado, su foto se oculta del mosaico público.
+
+Las fotos y sus destinos se guardan al guardar cada contenido; **Guardar mosaico** guarda el título general y la activación. **Ver mosaico en el Home** abre el resultado. Un diseño se abre en /disenos/ID y una colección en su dirección propia, por ejemplo /alfombras.
+
+Para instancias existentes, ejecutar node --env-file=.env.local scripts/setup-independent-mosaic.mjs URL_DE_POCKETBASE después de los scripts de mosaico inicial y páginas de colecciones. Agrega mosaic_tiles y conserva las fotos anteriores disponibles como copias independientes enlazadas a sus colecciones; no modifica productos originales. Las instalaciones nuevas aplican las migraciones equivalentes.
+
 Crear primero una colección y luego asociar alfombras. Una alfombra necesita nombre, descripción, imagen y precio entero en centavos ARS. Ejemplo: $150.000 equivale a `15000000`. Medidas y materiales son campos descriptivos opcionales.
 
 Marcar **Vendido** conserva la publicación como muestra y bloquea agregarla al carrito. Despublicar la retira de la tienda. No hay conteo de stock ni reserva automática. El filtro de colección muestra solo los productos de la colección seleccionada; el carrito conserva todos sus productos.
 
 ## Configuración y pedidos
 
-En Configuración se editan identidad, logo, colores institucionales, redes, dirección, horarios, enlace al mapa y WhatsApp comercial. La tienda conserva su paleta crema/dorado. No se heredan números, direcciones, cuentas ni contenido de otras aplicaciones.
+En Configuración se editan identidad, logo, colores institucionales, redes, dirección, horarios, enlace al mapa y WhatsApp comercial. El Home, la tienda y el resumen de pedido comparten logo, navegación, pie de página y colores configurados, con la misma tipografía institucional. Los filtros, productos y carrito mantienen su funcionamiento. No se heredan números, direcciones, cuentas ni contenido de otras aplicaciones.
+
+**Color destacado** controla los textos y enlaces que aparecen naranjas por defecto, incluidos **Conocer colección**, **Leer noticia** y los detalles destacados de la tienda. El selector muestra una muestra grande y el código hexadecimal del color elegido. Guardar la configuración y recargar el sitio para ver el cambio.
 
 WhatsApp debe tener entre 8 y 15 dígitos, con código de país y sin `+` ni separadores. Si falta un número válido o el servicio de servidor no tiene credenciales, los pedidos permanecen deshabilitados.
 
@@ -57,3 +69,10 @@ Para habilitar los estados en instancias externas, ejecutar `node --env-file=.en
 En **Ventas confirmadas**, **Imprimir ventas confirmadas** descarga un informe PDF con todas las ventas de la lista visible, su detalle, la cantidad de ventas y el total general en pesos. **Desde / Hasta** filtra por fecha de creación del pedido, incluyendo ambos días completos en horario de Argentina; no por fecha de confirmación ni cobro. Se puede completar solo un extremo o dejar ambos vacíos para incluir todas. El filtro actualiza la lista y su total; **Limpiar fechas** muestra todas nuevamente. No incluye pedidos entregados, cancelados, pendientes ni archivados. El servidor vuelve a consultar los datos al generar el informe para reflejar el estado vigente. El PDF permite conservar una copia, tiene numeración de páginas y sigue siendo un registro interno sin acreditar pagos.
 
 El carrito se conserva en el mismo navegador. Productos despublicados se señalan como no disponibles y deben quitarse para continuar. Un catálogo vacío muestra “Todavía no hay productos publicados”; una caída de conexión muestra “No pudimos cargar el catálogo”.
+
+
+En Colecciones se administran la foto, título, descripción y dirección de cada página. Por ejemplo, la dirección alfombras abre /alfombras; usar minúsculas, números y guiones, sin barra inicial. Las tarjetas del Home solo muestran foto y título y abren esa página. Los enlaces antiguos por identificador redirigen a la dirección configurada.
+
+En Diseños se cargan piezas independientes de Tienda, sin precio: nombre, descripción, colección, foto principal y hasta diez fotos adicionales (PNG, JPEG o WebP, 5 MB por foto). Publicar el diseño y su colección para que aparezcan en la página correspondiente. Los productos de Tienda se conservan por separado y no se copian automáticamente. Las fotos se pueden recorrer desde cada tarjeta del diseño.
+
+Para preparar una instancia externa, ejecutar node --env-file=.env.local scripts/setup-collection-pages.mjs URL_DE_POCKETBASE. Agrega Diseños y las direcciones, conserva las direcciones existentes y asigna direcciones a las colecciones antiguas.

@@ -1,6 +1,7 @@
 "use client";
 import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { definitions, collectionLabels } from "@/lib/admin-fields";
+import { fileUrl } from "@/lib/pocketbase";
 import { ContentPreview, type ContentRecord } from "./content-preview";
 async function json(r: Response) {
   const d = await r.json();
@@ -58,7 +59,9 @@ export function AdminCollection({ collection }: { collection: string }) {
         <h1>
           {collection === "products"
             ? "Productos de la tienda"
-            : collectionLabels[collection]}
+            : collection === "mosaic_tiles"
+              ? "Imágenes del mosaico"
+              : collectionLabels[collection]}
         </h1>
         <button
           className="secondary"
@@ -71,6 +74,13 @@ export function AdminCollection({ collection }: { collection: string }) {
         </button>
       </div>
       <p>Guardá como borrador para revisar antes de publicar.</p>
+      {collection === "collections" && (
+        <p>
+          Los diseños se cargan en Diseños: asigná cada diseño a su colección y
+          agregá sus fotos en Galería. Aquí se administra la foto y el título de
+          la tarjeta del Home.
+        </p>
+      )}
       {loading && <p>Cargando…</p>}
       {error && (
         <p role="alert" className="form-error">
@@ -115,7 +125,18 @@ export function AdminCollection({ collection }: { collection: string }) {
                 {r.priority || 0}
                 {r.sold ? " · Vendido" : ""}
               </span>
-              <h3>{r.title || r.name}</h3>
+              <h3>
+                {r.title || r.name || String(r.target || "Imagen del mosaico")}
+              </h3>
+              {collection === "mosaic_tiles" && r.image && (
+                <img
+                  src={fileUrl(r.collectionId || "mosaic_tiles", r.id, r.image)}
+                  alt=""
+                  width="100"
+                  height="80"
+                  style={{ objectFit: "cover" }}
+                />
+              )}
             </div>
             <div className="record-actions">
               <button disabled={busy} onClick={() => setPreview(r)}>
@@ -154,7 +175,7 @@ function Editor({
   const [values, setValues] = useState<Record<string, string>>(() =>
     Object.fromEntries(
       fields
-        .filter((f) => f.type !== "file")
+        .filter((f) => f.type !== "file" && f.type !== "gallery")
         .map((f) => [
           f.name,
           f.type === "date"
@@ -166,13 +187,18 @@ function Editor({
   const [published, setPublished] = useState(Boolean(record.published));
   const [priority, setPriority] = useState(Number(record.priority || 0));
   const [file, setFile] = useState<File | null>(null);
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const [removed, setRemoved] = useState<string[]>([]);
+  const existingGallery = Array.isArray(record.gallery)
+    ? (record.gallery as string[])
+    : [];
   const [image, setImage] = useState("");
   const [preview, setPreview] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [collections, setCollections] = useState<ContentRecord[]>([]);
   useEffect(() => {
-    if (collection === "products")
+    if (collection === "products" || collection === "designs")
       void fetch("/api/admin/collections")
         .then(json)
         .then(setCollections)
@@ -198,6 +224,10 @@ function Editor({
       data.set("published", String(published));
       data.set("priority", String(priority));
       if (file) data.set("image", file);
+      if (existingGallery.length - removed.length + galleryFiles.length > 10)
+        throw new Error("La galería admite hasta 10 imágenes adicionales.");
+      galleryFiles.forEach((f) => data.append("gallery+", f));
+      removed.forEach((name) => data.append("gallery-", name));
       await json(
         await fetch(
           `/api/admin/${collection}${record.id ? `/${record.id}` : ""}`,
@@ -246,6 +276,67 @@ function Editor({
                   </small>
                 )}
               </>
+            ) : f.type === "gallery" ? (
+              <>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={(e) =>
+                    setGalleryFiles(Array.from(e.target.files || []))
+                  }
+                />
+                <small>
+                  Seleccioná varias fotos a la vez. Se agregan a las fotos
+                  guardadas.
+                </small>
+                <span className="gallery-editor">
+                  {existingGallery.map((name) => (
+                    <span
+                      key={name}
+                      style={{
+                        display: "inline-flex",
+                        flexDirection: "column",
+                        margin: 8,
+                      }}
+                    >
+                      <img
+                        src={fileUrl(
+                          record.collectionId || "products",
+                          record.id,
+                          name,
+                        )}
+                        alt="Foto de la galería"
+                        width="100"
+                        height="90"
+                        style={{
+                          objectFit: "contain",
+                          opacity: removed.includes(name) ? 0.35 : 1,
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setRemoved((v) =>
+                            v.includes(name)
+                              ? v.filter((n) => n !== name)
+                              : [...v, name],
+                          )
+                        }
+                      >
+                        {removed.includes(name)
+                          ? "Conservar foto"
+                          : "Quitar foto"}
+                      </button>
+                    </span>
+                  ))}
+                </span>
+                {galleryFiles.length > 0 && (
+                  <small>
+                    {galleryFiles.length} fotos nuevas seleccionadas
+                  </small>
+                )}
+              </>
             ) : f.type === "file" ? (
               <input
                 type="file"
@@ -253,8 +344,24 @@ function Editor({
                 required={f.required && !record.image}
                 onChange={(e) => setFile(e.target.files?.[0] || null)}
               />
+            ) : f.type === "destination" ? (
+              <>
+                <input
+                  type="text"
+                  aria-label={f.label}
+                  placeholder="https://alfombras.catamarca.io/alfombras"
+                  required
+                  value={values[f.name]}
+                  onChange={(e) => set(f.name, e.target.value)}
+                />
+                <small>
+                  Pegá el enlace completo del sitio o una dirección corta, como
+                  /alfombras o /lados-de-cama. El destino debe estar publicado.
+                </small>
+              </>
             ) : f.type === "collection" ? (
               <select
+                required={f.required}
                 value={values[f.name]}
                 onChange={(e) => set(f.name, e.target.value)}
               >

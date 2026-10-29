@@ -36,7 +36,7 @@ Para comparar las referencias, iniciar sus compilaciones existentes en los puert
 - Cálculo con precios del servidor, cantidades inválidas, ausencia de productos y snapshots inmutables.
 - Sanitización de scripts, atributos ejecutables y URLs peligrosas.
 - Portada, noticias, detalle, páginas institucionales y enlace de colección a tienda.
-- CSS de tienda presente y estilos institucionales conservados al volver al inicio.
+- Encabezado, logo, navegación, pie, fuente y colores compartidos entre Home, tienda y resumen de pedido; navegación móvil, ausencia de desbordamiento y conservación del carrito al volver al inicio.
 - Fotografía ampliada, Escape y devolución de foco; carrito persistente y almacenamiento inválido.
 - Fallo temporal de envío conservando carrito, precio cambiado y segunda confirmación.
 - Pedido guardado antes de WhatsApp, resumen privado y reintentos concurrentes sin duplicación.
@@ -44,6 +44,8 @@ Para comparar las referencias, iniciar sus compilaciones existentes en los puert
 - Guardar borrador, publicar, ordenar y duplicar noticias con imagen.
 - Catálogo vacío y catálogo inaccesible diferenciados; archivos falsos o sobredimensionados rechazados sin reemplazar la imagen.
 - Cambios de configuración visibles al público y rechazo de un WhatsApp inválido.
+- Guardar Color destacado desde el panel, conservarlo al recargar y aplicarlo a Conocer colección, Leer noticia, ubicación y acentos de la tienda; selector legible en escritorio y móvil.
+- Mosaico del Home: nueve fotos independientes, carga desde el panel, destinos a colección y diseño, ausencia de texto sobre fotos, límite de publicaciones, ocultamiento de destinos no publicados, adaptación móvil y permisos.
 - Borradores, pedidos y alta de personal inaccesibles públicamente.
 - Archivo individual y masivo, recuperación de pedidos y conservación de sus datos.
 - Venta confirmada, entrega, cancelación y corrección de estados; filtros y resumen privado actualizados, rechazo de estados inválidos, solicitudes ajenas y cambios de importes.

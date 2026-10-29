@@ -13,6 +13,7 @@ export type Content = RecordModel & {
   published_on: string;
   url: string;
   key: string;
+  slug?: string;
 };
 export type Product = Content & {
   priceMinor: number;
@@ -23,16 +24,16 @@ export type Product = Content & {
   collection: string;
   published: boolean;
   imageUrl?: string;
+  gallery?: string[];
+  galleryUrls?: string[];
 };
 export async function published<T = Content>(name: string, filter = "") {
   const pb = createPocketBase();
-  return pb
-    .collection(name)
-    .getFullList<T>({
-      filter: `published = true${filter ? ` && (${filter})` : ""}`,
-      sort: contentSort(name),
-      requestKey: null,
-    });
+  return pb.collection(name).getFullList<T>({
+    filter: `published = true${filter ? ` && (${filter})` : ""}`,
+    sort: contentSort(name),
+    requestKey: null,
+  });
 }
 export async function publicOne(name: string, id: string) {
   if (!/^[a-z0-9]{15}$/.test(id)) return null;
@@ -47,7 +48,7 @@ export async function publicOne(name: string, id: string) {
 }
 export async function publicHome() {
   const data = await Promise.all(
-    ["news", "collections", "banners", "reels", "institutional_pages"].map(
+    ["collections", "banners", "reels", "institutional_pages"].map(
       async (name) => {
         try {
           return { name, items: await published(name), error: false };

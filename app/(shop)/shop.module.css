@@ -1,21 +1,8 @@
-@font-face {
-  font-family: Geist;
-  src: url("/fonts/geist-latin.woff2") format("woff2");
-  font-weight: 100 900;
-  font-display: swap;
-}
-@font-face {
-  font-family: Playfair;
-  src: url("/fonts/playfair-latin.woff2") format("woff2");
-  font-weight: 600 700;
-  font-style: normal;
-  font-display: swap;
-}
 .shop {
-  background: #faf7f0;
-  color: #181412;
-  min-height: 100vh;
-  font-family: Geist, Arial, Helvetica, sans-serif;
+  background: var(--paper, #f7f4ee);
+  color: var(--ink, #101128);
+  min-height: 65vh;
+  font-family: inherit;
   overflow-x: clip;
 }
 .shop a {
@@ -28,80 +15,76 @@
   margin: 0;
 }
 .header {
-  border-bottom: 1px solid #eadfcd;
-  background: #fffffff0;
+  background: var(--surface, #fff);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--ink, #101128) 12%, transparent);
 }
 .headerInner {
-  max-width: 1152px;
-  margin: auto;
-  padding: 16px 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
+  padding: 60px 7vw 48px;
 }
 .brand {
-  font-family: Playfair, Georgia, serif;
-  font-size: 34px;
+  color: var(--accent, #ed8023);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: -1px;
-  color: #b88a44;
-  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 .header h1 {
-  font-size: 24px;
-  margin-top: 4px;
-  letter-spacing: -0.5px;
+  font-size: clamp(44px, 6vw, 76px);
+  line-height: 1;
+  letter-spacing: -0.055em;
+  font-weight: 500;
+  margin: 12px 0 18px;
 }
-.nav {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
+.eyebrow {
+  color: var(--accent, #ed8023);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
 }
-.nav a {
-  padding: 9px 12px;
-  background: #faf7f0;
-  border: 1px solid #d8c6aa;
-  border-radius: 6px;
-  font-size: 14px;
+.intro {
+  max-width: 620px;
+  font-size: 17px;
+  line-height: 1.6;
 }
 .container {
-  max-width: 1152px;
-  margin: auto;
-  padding: 24px;
+  padding: 36px 7vw 64px;
 }
 .filters {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 }
 .filters a {
   padding: 8px 14px;
-  border: 1px solid #d8c6aa;
+  border: 1px solid color-mix(in srgb, var(--ink, #101128) 22%, transparent);
   border-radius: 30px;
   font-size: 14px;
 }
 .filters .active {
-  background: #181412;
-  color: white;
+  background: var(--ink, #101128);
+  color: var(--surface, #fff);
+}
+.filters a:hover {
+  border-color: var(--accent, #ed8023);
 }
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 360px;
+  grid-template-columns: minmax(0, 1fr) 340px;
   gap: 32px;
   align-items: start;
 }
 .products {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px;
+  gap: 24px;
 }
 .card {
   min-width: 0;
-  border: 1px solid #e4e4e7;
-  border-radius: 8px;
-  background: white;
+  border: 1px solid color-mix(in srgb, var(--ink, #101128) 12%, transparent);
+  border-radius: 3px;
+  background: var(--surface, #fff);
   overflow: hidden;
   box-shadow: 0 1px 3px #0000000d;
 }
@@ -111,14 +94,14 @@
   width: 100%;
   padding: 0;
   position: relative;
-  background: white;
+  background: var(--surface, #fff);
   text-align: left;
 }
 .imageButton img {
   width: 100%;
   aspect-ratio: 1;
   object-fit: contain;
-  padding: 12px;
+  padding: 20px;
   display: block;
   transition: transform 0.2s;
 }
@@ -139,7 +122,7 @@
   position: absolute;
   left: 12px;
   top: 12px;
-  background: #dc2626;
+  background: var(--ink, #101128);
   color: white;
   padding: 6px 12px;
   border-radius: 30px;
@@ -148,7 +131,7 @@
   text-transform: uppercase;
 }
 .cardBody {
-  padding: 16px;
+  padding: 20px;
   display: grid;
   gap: 12px;
 }
@@ -165,7 +148,7 @@
 }
 .description {
   font-size: 14px;
-  color: #52525b;
+  color: color-mix(in srgb, var(--ink, #101128) 78%, var(--surface, #fff));
   line-height: 1.5;
   white-space: pre-line;
   overflow-wrap: anywhere;
@@ -188,11 +171,11 @@
   font-weight: 700;
 }
 .button {
-  background: #09090b;
+  background: var(--ink, #101128);
   border: 0;
-  color: white;
-  padding: 9px 12px;
-  border-radius: 6px;
+  color: var(--surface, #fff);
+  padding: 11px 18px;
+  border-radius: 100px;
   font-size: 14px;
   font-weight: 500;
   text-decoration: none;
@@ -206,18 +189,20 @@
   position: sticky;
   top: 24px;
   min-width: 0;
-  background: white;
-  border: 1px solid #e4e4e7;
-  border-radius: 8px;
-  padding: 16px;
+  background: var(--surface, #fff);
+  border: 1px solid color-mix(in srgb, var(--ink, #101128) 15%, transparent);
+  border-top: 3px solid var(--accent, #ed8023);
+  border-radius: 3px;
+  padding: 24px;
   box-shadow: 0 1px 3px #0000000d;
 }
 .cart h2 {
-  font-size: 18px;
+  font-size: 24px;
+  font-weight: 600;
 }
 .muted {
   font-size: 14px;
-  color: #71717a;
+  color: color-mix(in srgb, var(--ink, #101128) 70%, var(--surface, #fff));
   line-height: 1.5;
 }
 .cart > .muted {
@@ -307,8 +292,8 @@
   border-radius: 12px;
   width: min(768px, calc(100vw - 32px));
   max-height: 90vh;
-  background: white;
-  color: #181412;
+  background: var(--surface, #fff);
+  color: var(--ink, #101128);
   box-shadow: 0 20px 70px #0004;
 }
 .dialog::backdrop {
@@ -352,11 +337,11 @@
   padding-top: 16px;
 }
 .summary {
-  background: white;
-  border: 1px solid #eadfcd;
+  background: var(--surface, #fff);
+  border: 1px solid color-mix(in srgb, var(--ink, #101128) 15%, transparent);
   border-radius: 10px;
   padding: 28px;
-  max-width: 760px;
+  max-width: 860px;
   margin: auto;
   display: grid;
   gap: 20px;
@@ -369,9 +354,7 @@
   line-height: 1.8;
 }
 .footer {
-  max-width: 1152px;
-  margin: auto;
-  padding: 24px;
+  padding: 0 7vw 32px;
   font-size: 13px;
   color: #71717a;
 }
@@ -390,18 +373,16 @@
 }
 @media (max-width: 639px) {
   .headerInner {
-    align-items: start;
-    flex-direction: column;
-    padding: 16px;
-  }
-  .brand {
-    font-size: 28px;
+    padding: 36px 6vw 30px;
   }
   .header h1 {
-    font-size: 20px;
+    font-size: 44px;
   }
   .container {
-    padding: 24px 16px;
+    padding: 28px 6vw 40px;
+  }
+  .footer {
+    padding: 0 6vw 28px;
   }
   .products {
     grid-template-columns: 1fr;

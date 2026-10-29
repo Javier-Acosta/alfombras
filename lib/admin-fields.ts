@@ -8,12 +8,28 @@ export type Field = {
     | "date"
     | "url"
     | "file"
+    | "gallery"
+    | "destination"
     | "checkbox"
     | "collection"
     | "pagekey";
   required?: boolean;
 };
 export const definitions: Record<string, Field[]> = {
+  mosaic_tiles: [
+    {
+      name: "image",
+      label: "Foto del mosaico (hasta 5 MB)",
+      type: "file",
+      required: true,
+    },
+    {
+      name: "target",
+      label: "Enlace del diseño o colección",
+      type: "destination",
+      required: true,
+    },
+  ],
   news: [
     { name: "title", label: "Título", type: "text", required: true },
     { name: "summary", label: "Resumen", type: "textarea", required: true },
@@ -59,6 +75,11 @@ export const definitions: Record<string, Field[]> = {
   collections: [
     { name: "name", label: "Nombre", type: "text", required: true },
     {
+      name: "slug",
+      label: "Dirección de la página (ej.: alfombras, sin /)",
+      type: "text",
+    },
+    {
       name: "description",
       label: "Descripción",
       type: "textarea",
@@ -71,7 +92,38 @@ export const definitions: Record<string, Field[]> = {
       required: true,
     },
   ],
+  designs: [
+    { name: "name", label: "Nombre", type: "text", required: true },
+    {
+      name: "description",
+      label: "Descripción",
+      type: "textarea",
+      required: true,
+    },
+    {
+      name: "collection",
+      label: "Colección",
+      type: "collection",
+      required: true,
+    },
+    {
+      name: "image",
+      label: "Foto principal (hasta 5 MB)",
+      type: "file",
+      required: true,
+    },
+    {
+      name: "gallery",
+      label: "Galería (hasta 10 imágenes adicionales, 5 MB cada una)",
+      type: "gallery",
+    },
+  ],
   products: [
+    {
+      name: "gallery",
+      label: "Galería (hasta 10 imágenes adicionales, 5 MB cada una)",
+      type: "gallery",
+    },
     { name: "name", label: "Nombre", type: "text", required: true },
     {
       name: "description",
@@ -104,6 +156,7 @@ export const collectionLabels: Record<string, string> = {
   institutional_pages: "La fábrica y proceso artesanal",
   collections: "Colecciones",
   products: "Tienda",
+  designs: "Diseños",
 };
 export function isCollection(name: string) {
   return Object.hasOwn(definitions, name);

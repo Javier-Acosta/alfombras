@@ -22,6 +22,7 @@ export default async function Layout({
             {v}
           </Link>
         ))}
+        <Link href="/admin/mosaico">Mosaico</Link>
         <Link href="/admin/pedidos">Pedidos</Link>
         <Link href="/admin/settings">Configuración</Link>
         <Link href="/">Ver sitio ↗</Link>

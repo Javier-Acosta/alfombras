@@ -1,4 +1,5 @@
 import { definitions } from "./admin-fields";
+import { validCollectionSlug } from "./collection-path";
 import { sanitizeRichText } from "./rich-text";
 import { defaultSettings, safeWebUrl, validWhatsapp } from "./settings-values";
 
@@ -29,6 +30,23 @@ export async function validateImage(file: File, limit = 5242880) {
 export async function editableForm(collection: string, source: FormData) {
   const out = new FormData();
   for (const field of definitions[collection]) {
+    if (field.type === "gallery") {
+      const files = source.getAll("gallery+");
+      if (files.length > 10)
+        throw new Error("La galería admite hasta 10 imágenes adicionales.");
+      for (const file of files) {
+        if (!(file instanceof File) || !file.size)
+          throw new Error("Imagen inválida.");
+        await validateImage(file);
+        out.append("gallery+", file);
+      }
+      for (const name of source.getAll("gallery-")) {
+        if (typeof name !== "string" || !/^[a-zA-Z0-9_.-]+$/.test(name))
+          throw new Error("Imagen inválida.");
+        out.append("gallery-", name);
+      }
+      continue;
+    }
     const value = source.get(field.name);
     if (value === null) continue;
     if (field.type === "file") {
@@ -42,6 +60,10 @@ export async function editableForm(collection: string, source: FormData) {
       continue;
     }
     if (typeof value !== "string") throw new Error("Campo inválido.");
+    if (field.name === "slug" && value && !validCollectionSlug(value.trim()))
+      throw new Error(
+        "La dirección debe usar letras minúsculas, números y guiones, sin / ni espacios, y no puede coincidir con una sección del sitio.",
+      );
     if (value.length > 100000)
       throw new Error("El texto supera el límite permitido.");
     if (field.required && !value.trim())

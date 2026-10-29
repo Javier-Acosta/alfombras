@@ -2,12 +2,27 @@
 
 ## Purpose
 
-Permitir descubrir las colecciones de la fábrica y consultar alfombras publicadas en una tienda con la presentación de Tienda Cata.
+Permitir descubrir las colecciones de la fábrica y consultar los productos publicados en una tienda integrada visualmente con el sitio institucional.
 
 ## ADDED Requirements
 
-### Requirement: Tienda con diseño de referencia
-La tienda SHALL conservar el diseño de Tienda Cata: fondo crema, acentos dorados, título serif, tarjetas blancas, imágenes completas y carrito lateral en escritorio, apilado en móvil.
+### Requirement: Mosaico de fotos independientes
+El Home SHALL ofrecer una sección con hasta nueve fotos propias, independientes de Tienda, sin títulos ni descripciones sobre las imágenes. El personal SHALL poder cargar fotos, elegir como destino una colección o un diseño publicado, ordenar mediante prioridad y activar o desactivar la sección. El mosaico SHALL usar tres columnas en escritorio y dos en móvil.
+
+#### Scenario: Configurar y visitar una imagen
+- **WHEN** el personal publica fotos con destinos y el visitante selecciona una
+- **THEN** se abre la página de la colección o del diseño configurado, sin pasar por Tienda.
+
+#### Scenario: Destino despublicado o mosaico desactivado
+- **WHEN** un destino deja de estar publicado o se desactiva el mosaico
+- **THEN** se oculta la imagen correspondiente o toda la sección, conservando las fotos guardadas.
+
+### Requirement: Tienda con identidad institucional compartida
+La tienda SHALL compartir con el Home el encabezado, logo, menú completo, pie de página, colores configurados y tipografía institucional. El catálogo SHALL conservar imágenes completas y carrito lateral en escritorio, apilado en móvil, manteniendo sus filtros y flujo de pedido.
+
+#### Scenario: Continuidad entre Home y tienda
+- **WHEN** se navega del Home a la tienda y se vuelve al inicio
+- **THEN** se conservan el logo, navegación, tipografía y colores institucionales, sin presentar una marca comercial distinta.
 
 #### Scenario: Consulta de un producto
 - **WHEN** se abre `/tienda` y se selecciona una alfombra

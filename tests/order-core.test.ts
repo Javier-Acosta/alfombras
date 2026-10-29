@@ -1,5 +1,48 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
+import { parseMosaic } from "../lib/mosaic-values.ts";
+import { normalizeMosaicLink } from "../lib/mosaic-link.ts";
+test("el enlace del mosaico admite direcciones locales y completas del sitio", () => {
+  const origins = ["http://localhost:3000", "https://alfombras.catamarca.io"];
+  assert.equal(normalizeMosaicLink(" /alfombras ", origins), "/alfombras");
+  assert.equal(
+    normalizeMosaicLink(
+      "https://alfombras.catamarca.io/lados-de-cama/",
+      origins,
+    ),
+    "/lados-de-cama",
+  );
+  assert.equal(
+    normalizeMosaicLink(
+      "http://localhost:3000/disenos/abcdefghijklmno",
+      origins,
+    ),
+    "/disenos/abcdefghijklmno",
+  );
+  for (const value of [
+    "https://otro.example/alfombras",
+    "//otro.example/alfombras",
+    "javascript:alert(1)",
+    "alfombras",
+    "/\\otro.example",
+    "https://usuario@alfombras.catamarca.io/alfombras",
+  ])
+    assert.throws(() => normalizeMosaicLink(value, origins));
+});
+
+test("mosaico valida título y activación sin vincular productos", () => {
+  assert.deepEqual(
+    parseMosaic({ title: "  Piezas destacadas  ", enabled: true }),
+    { title: "Piezas destacadas", enabled: true },
+  );
+  for (const input of [
+    { title: "", enabled: true },
+    { title: "Piezas", enabled: "true" },
+    { title: "Piezas", enabled: true, products: [] },
+    { title: "x".repeat(81), enabled: true },
+  ])
+    assert.throws(() => parseMosaic(input));
+});
 import { salesDateRange, saleInRange } from "../lib/sales-report.ts";
 
 test("el rango de ventas incluye ambos días completos en horario de Argentina", () => {

@@ -21,6 +21,7 @@ export default async function Page() {
       <div className="module-grid">
         {Object.entries({
           ...collectionLabels,
+          mosaico: "Mosaico del Home",
           pedidos: "Pedidos",
           settings: "Configuración",
         }).map(([k, v]) => (

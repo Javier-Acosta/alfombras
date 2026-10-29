@@ -3,6 +3,10 @@ import { isCollection, contentSort, definitions } from "@/lib/admin-fields";
 import { editableForm, settingsForm } from "@/lib/admin-content";
 import { SETTINGS_ID } from "@/lib/settings-values";
 import { sameOrigin } from "@/lib/security";
+import { collectionSlug } from "@/lib/collection-path";
+import { validCollectionSlug } from "@/lib/collection-path";
+import { collectionPath } from "@/lib/collection-path";
+import { normalizeMosaicLink } from "@/lib/mosaic-link";
 type Ctx = { params: Promise<{ path: string[] }> };
 async function handle(request: Request, ctx: Ctx) {
   if (request.method !== "GET" && !sameOrigin(request))
@@ -66,9 +70,26 @@ async function handle(request: Request, ctx: Ctx) {
       const current = await pb.collection(name).getOne(id);
       const data = new FormData();
       for (const field of definitions[name]) {
+        if (field.name === "slug") {
+          data.set(
+            "slug",
+            `${collectionSlug(String(current.name))}-${crypto.randomUUID().slice(0, 8)}`,
+          );
+          continue;
+        }
         const v = current[field.name];
         if (v === undefined || v === null || v === "") continue;
-        if (field.type === "file") {
+        if (field.type === "gallery") {
+          for (const filename of Array.isArray(v) ? v : []) {
+            const res = await fetch(pb.files.getURL(current, filename));
+            if (!res.ok) throw new Error("No se pudo copiar la galería.");
+            const blob = await res.blob();
+            data.append(
+              "gallery+",
+              new File([blob], filename, { type: blob.type }),
+            );
+          }
+        } else if (field.type === "file") {
           const url = pb.files.getURL(current, v);
           const res = await fetch(url);
           if (!res.ok) throw new Error("No se pudo copiar la imagen.");
@@ -89,7 +110,89 @@ async function handle(request: Request, ctx: Ctx) {
       (request.method === "PATCH" && id)
     ) {
       const data = await editableForm(name, await request.formData());
-      if (name === "products" && data.get("collection"))
+      if (name === "mosaic_tiles") {
+        const current = id ? await pb.collection(name).getOne(id) : null;
+        let target = normalizeMosaicLink(
+          String(data.get("target") || current?.target || ""),
+          [
+            new URL(request.url).origin,
+            process.env.NEXT_PUBLIC_APP_URL || new URL(request.url).origin,
+            "https://alfombras.catamarca.io",
+          ],
+        );
+        if (/^\/colecciones\/[a-z0-9]{15}$/.test(target)) {
+          const collection = await pb
+            .collection("collections")
+            .getOne(target.split("/")[2]);
+          if (!collection.published || !collection.slug)
+            throw new Error(
+              "La colección del enlace debe estar publicada y tener una dirección configurada.",
+            );
+          target = collectionPath(collection);
+        }
+        if (/^\/disenos\/[a-z0-9]{15}$/.test(target)) {
+          const design = await pb
+            .collection("designs")
+            .getOne(target.split("/")[2]);
+          const parent = await pb
+            .collection("collections")
+            .getOne(design.collection);
+          if (!design.published || !parent.published)
+            throw new Error(
+              "Publicá el diseño y su colección antes de enlazarlos.",
+            );
+        } else if (
+          target.startsWith("/") &&
+          validCollectionSlug(target.slice(1))
+        ) {
+          await pb.collection("collections").getFirstListItem(
+            pb.filter("slug = {:slug} && published = true", {
+              slug: target.slice(1),
+            }),
+          );
+        } else
+          throw new Error(
+            "Pegá el enlace de una colección o un diseño publicado de este sitio.",
+          );
+        data.set("target", target);
+        if (data.get("published") === "true") {
+          const others = await pb.collection(name).getList(1, 1, {
+            filter: pb.filter("published = true && id != {:id}", {
+              id: id || "",
+            }),
+          });
+          if (others.totalItems >= 9)
+            throw new Error(
+              "El mosaico admite 9 imágenes publicadas. Despublicá una antes de agregar otra.",
+            );
+        }
+      }
+      if (name === "collections" && !id && !data.get("slug"))
+        data.set(
+          "slug",
+          collectionSlug(String(data.get("name") || "Colección")),
+        );
+      if (
+        (name === "products" || name === "designs") &&
+        (data.has("gallery+") || data.has("gallery-"))
+      ) {
+        const current = id ? await pb.collection(name).getOne(id) : null;
+        const saved: string[] = Array.isArray(current?.gallery)
+          ? current.gallery
+          : [];
+        const removed = data.getAll("gallery-");
+        if (removed.some((filename) => !saved.includes(String(filename))))
+          throw new Error(
+            "La foto que querés quitar ya no está en la galería. Volvé a cargar el diseño.",
+          );
+        if (
+          saved.filter((filename) => !removed.includes(filename)).length +
+            data.getAll("gallery+").length >
+          10
+        )
+          throw new Error("La galería admite hasta 10 imágenes adicionales.");
+      }
+      if ((name === "products" || name === "designs") && data.get("collection"))
         await pb
           .collection("collections")
           .getOne(String(data.get("collection")));

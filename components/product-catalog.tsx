@@ -1,4 +1,5 @@
 "use client";
+import { ProductGallery } from "./product-gallery";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import type { Product } from "@/lib/content";
 import { formatMoney } from "@/lib/money";
@@ -320,10 +321,10 @@ export function ProductCatalog({
           <>
             <div className={styles.dialogTop}>
               {selected.imageUrl && (
-                <img
-                  className={styles.dialogImage}
-                  src={selected.imageUrl}
-                  alt={selected.name}
+                <ProductGallery
+                  key={selected.id}
+                  name={selected.name}
+                  images={[selected.imageUrl, ...(selected.galleryUrls || [])]}
                 />
               )}{" "}
               {selected.sold && <span className={styles.sold}>Vendido</span>}

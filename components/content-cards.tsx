@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { collectionPath } from "@/lib/collection-path";
 import { fileUrl } from "@/lib/pocketbase";
 import type { Content } from "@/lib/content";
 export function NewsCards({ items }: { items: Content[] }) {
@@ -31,12 +32,18 @@ export function NewsCards({ items }: { items: Content[] }) {
     </div>
   );
 }
-export function CollectionCards({ items }: { items: Content[] }) {
+export function CollectionCards({
+  items,
+  compact = false,
+}: {
+  items: Content[];
+  compact?: boolean;
+}) {
   return (
     <div className="guest-grid">
       {items.map((c) => (
         <article className="guest-card" key={c.id}>
-          <Link className="guest-card-link" href={`/colecciones/${c.id}`}>
+          <Link className="guest-card-link" href={collectionPath(c)}>
             {c.image && (
               <img
                 src={fileUrl(c.collectionId, c.id, c.image)}
@@ -45,8 +52,12 @@ export function CollectionCards({ items }: { items: Content[] }) {
               />
             )}
             <h3>{c.name}</h3>
-            <p>{c.description}</p>
-            <span className="news-read-more">Conocer colección →</span>
+            {!compact && (
+              <>
+                <p>{c.description}</p>
+                <span className="news-read-more">Conocer colección →</span>
+              </>
+            )}
           </Link>
         </article>
       ))}

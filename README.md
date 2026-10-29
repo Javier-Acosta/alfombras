@@ -1,6 +1,6 @@
 # Fábrica de Alfombras Catamarca
 
-Sitio institucional basado en Feria del Libro, con La fábrica, Proceso artesanal, Colecciones, Noticias e Instagram. La sección Tienda conserva la presentación de Tienda Cata y permite preparar pedidos por WhatsApp. Pago y entrega se coordinan manualmente.
+Sitio institucional con La fábrica, Proceso artesanal, Colecciones, Noticias e Instagram. La Tienda comparte el encabezado, logo, navegación, colores y tipografía del Home y permite preparar pedidos por WhatsApp. Pago y entrega se coordinan manualmente.
 
 ## Desarrollo local
 

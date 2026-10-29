@@ -52,16 +52,17 @@ test("sitio institucional, tienda, carrito y pedido en escritorio y móvil", asy
     "Contenido de prueba del entorno local.",
   );
   await page.goto(`/colecciones/${fixtures.collection}`);
-  await page
-    .getByRole("link", { name: "Ver alfombras de esta colección" })
-    .click();
+  await expect(
+    page.locator('article.news-detail a[href^="/tienda"]'),
+  ).toHaveCount(0);
+  await page.goto(`/tienda?coleccion=${fixtures.collection}`);
   await expect(page).toHaveURL(/tienda\?coleccion=/);
   await expect(
     page.getByRole("link", {
       name: "Fábrica de Alfombras Catamarca",
       exact: true,
     }),
-  ).toHaveCSS("color", "rgb(184, 138, 68)");
+  ).toHaveCSS("color", "rgb(237, 128, 35)");
   await expect(page.getByText("Borrador privado", { exact: true })).toHaveCount(
     0,
   );
@@ -179,7 +180,11 @@ test("sitio institucional, tienda, carrito y pedido en escritorio y móvil", asy
   );
   await page.reload();
   await expect(page.getByText("El carrito está vacío.")).toBeVisible();
-  await page.getByRole("link", { name: "Inicio", exact: true }).click();
+  await page.getByText("Menú", { exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Navegación móvil" })
+    .getByRole("link", { name: "Inicio", exact: true })
+    .click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "ALFOMBRAS",
   );

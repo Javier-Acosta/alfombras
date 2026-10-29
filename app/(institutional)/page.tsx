@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { publicHome, fileUrl } from "@/lib/content";
 import { getSiteSettings, safeWebUrl } from "@/lib/settings";
-import { NewsCards, CollectionCards } from "@/components/content-cards";
+import { CollectionCards } from "@/components/content-cards";
+import { HomeMosaic } from "@/components/home-mosaic";
+import { validWhatsapp } from "@/lib/settings-values";
 export default async function Home() {
   const [data, s] = await Promise.all([publicHome(), getSiteSettings()]);
   const banner = data.banners.items[0];
@@ -50,7 +52,8 @@ export default async function Home() {
           </Link>
         </div>
       </section>
-      <section className="section guests-section">
+      <HomeMosaic />
+      <section className="section guests-section home-collections">
         <div className="news-section-heading">
           <div>
             <p className="eyebrow orange">NUESTRAS ALFOMBRAS</p>
@@ -65,32 +68,12 @@ export default async function Home() {
           </Link>
         </div>
         {data.collections.items.length ? (
-          <CollectionCards items={data.collections.items.slice(0, 9)} />
+          <CollectionCards compact items={data.collections.items.slice(0, 9)} />
         ) : (
           <p className="empty">
             {data.collections.error
               ? "No pudimos cargar las colecciones. Volvé a intentar en unos minutos."
               : "Muy pronto compartiremos nuestras colecciones."}
-          </p>
-        )}
-      </section>
-      <section className="section news-section">
-        <div className="news-section-heading">
-          <div>
-            <p className="eyebrow pink">AL DÍA</p>
-            <h2>Noticias de la fábrica</h2>
-          </div>
-          <Link className="news-view-all" href="/noticias">
-            Ver todo →
-          </Link>
-        </div>
-        {data.news.items.length ? (
-          <NewsCards items={data.news.items.slice(0, 6)} />
-        ) : (
-          <p className="empty">
-            {data.news.error
-              ? "Las noticias no están disponibles temporalmente."
-              : "Las novedades de la fábrica aparecerán aquí."}
           </p>
         )}
       </section>
@@ -145,16 +128,29 @@ export default async function Home() {
             <p>La ubicación se publicará próximamente.</p>
           )}
           {s.hours && <p>{s.hours}</p>}
-          {safeWebUrl(s.map_url) && (
-            <a
-              className="light-button"
-              href={safeWebUrl(s.map_url)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Ver ubicación ↗
-            </a>
-          )}
+          <div className="factory-contact-actions">
+            {safeWebUrl(s.map_url) && (
+              <a
+                className="light-button"
+                href={safeWebUrl(s.map_url)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Ver ubicación ↗
+              </a>
+            )}
+            {validWhatsapp(s.whatsapp) && (
+              <a
+                className="light-button"
+                href={`https://wa.me/${s.whatsapp}?text=${encodeURIComponent("Hola, me gustaría contactarme con la Fábrica de Alfombras - Catamarca. Gracias")}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Contacto por WhatsApp (abre otra pestaña)"
+              >
+                Contacto ↗
+              </a>
+            )}
+          </div>
         </div>
         <div className="map-art">
           <Link href="/tienda" className="map-store">

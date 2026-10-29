@@ -14,7 +14,7 @@ Ver `proposal.md` para la motivación. El proyecto actual es una plantilla Next.
 
 ### Dos áreas visuales en una aplicación
 
-Usar App Router con grupos de rutas para aislar estilos institucionales y comerciales; compartir un acceso claro al Inicio y a Tienda. Mantener los estilos y fuentes de Feria del Libro en el área institucional y los de Tienda Cata en `/tienda`. Un rediseño unificado contradiría la elección del usuario; copiar ambos CSS globales sin aislamiento arriesga colisiones. La fidelidad se verificará visualmente en escritorio y móvil con datos de ejemplo equivalentes.
+Usar App Router con grupos de rutas y un marco público compartido (`SiteFrame`) para el tema configurado, logo, encabezado, menú completo y pie. La tienda y las páginas institucionales usan la misma identidad visual a pedido del usuario; el catálogo y el carrito conservan CSS Modules para sus componentes y heredan las variables y la tipografía institucionales. Verificar la continuidad al navegar entre Home y tienda, junto con el carrito y el diálogo, en escritorio y móvil.
 
 Rutas propuestas: `/`, `/la-fabrica`, `/proceso-artesanal`, `/colecciones`, `/colecciones/[id]`, `/noticias`, `/noticias/[id]`, `/tienda`, `/pedido/[token]`, `/admin/login`, `/admin` y pantallas de contenido, productos, pedidos y configuración. Ubicación será una sección del inicio. No se crearán rutas de cronograma o invitados. El detalle ampliado de producto seguirá el diálogo de Tienda Cata, con foco controlado y cierre por teclado.
 

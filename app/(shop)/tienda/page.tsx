@@ -28,12 +28,12 @@ export default async function Page({
   }
   const allowed = collections.some((c) => c.id === selected) ? selected : "";
   return (
-    <>
+    <main id="contenido">
       <ShopHeader />
-      <main id="contenido" className={styles.container}>
+      <div className={styles.container}>
         <nav className={styles.filters} aria-label="Filtrar por colección">
           <Link className={!allowed ? styles.active : undefined} href="/tienda">
-            Todas las alfombras
+            Todos los productos
           </Link>
           {collections.map((c) => (
             <Link
@@ -50,6 +50,9 @@ export default async function Page({
             products={products.map((p) => ({
               ...p,
               imageUrl: fileUrl(p.collectionId, p.id, p.image),
+              galleryUrls: (p.gallery || [])
+                .map((filename) => fileUrl(p.collectionId, p.id, filename))
+                .filter((url): url is string => Boolean(url)),
             }))}
             selectedCollection={allowed}
             selectedProduct={query.alfombra}
@@ -66,10 +69,10 @@ export default async function Page({
             <Link href="/tienda">Reintentar</Link>
           </div>
         )}
-      </main>
+      </div>
       <div className={styles.footer}>
         Pago y entrega a coordinar manualmente por WhatsApp.
       </div>
-    </>
+    </main>
   );
 }

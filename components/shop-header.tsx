@@ -1,27 +1,15 @@
-import Link from "next/link";
-import { getSiteSettings } from "@/lib/settings";
 import styles from "@/app/(shop)/shop.module.css";
-export async function ShopHeader({
-  title = "Productos disponibles",
-}: {
-  title?: string;
-}) {
-  const s = await getSiteSettings();
+export function ShopHeader({ title = "Tienda" }: { title?: string }) {
   return (
-    <header className={styles.header}>
+    <section className={styles.header} aria-labelledby="shop-title">
       <div className={styles.headerInner}>
-        <div>
-          <Link href="/tienda" className={styles.brand}>
-            {s.site_name}
-          </Link>
-          <h1>{title}</h1>
-        </div>
-        <nav className={styles.nav} aria-label="Navegación de tienda">
-          <Link href="/">Inicio</Link>
-          <Link href="/colecciones">Colecciones</Link>
-          <Link href="/admin">Vendedor</Link>
-        </nav>
+        <p className={styles.eyebrow}>HECHO A MANO EN CATAMARCA</p>
+        <h1 id="shop-title">{title}</h1>
+        <p className={styles.intro}>
+          Alfombras, tapices y piezas artesanales de nuestra fábrica. Elegí tu
+          pieza y coordiná tu pedido por WhatsApp.
+        </p>
       </div>
-    </header>
+    </section>
   );
 }

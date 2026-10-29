@@ -12,7 +12,7 @@ const labels: Record<string, string> = {
   address: "Dirección",
   hours: "Horarios",
   map_url: "Enlace HTTPS a ubicación",
-  whatsapp: "WhatsApp comercial (código de país y número, sin +)",
+  whatsapp: "WhatsApp de contacto y pedidos (código de país y número, sin +)",
   instagram_url: "Instagram",
   facebook_url: "Facebook",
   youtube_url: "YouTube",
@@ -91,12 +91,38 @@ export function SiteSettingsForm() {
                         setSettings({ ...settings, [key]: e.target.value })
                       }
                     />
+                  ) : key.endsWith("_color") ? (
+                    <>
+                      <span className="settings-color-control">
+                        <input
+                          type="color"
+                          name={key}
+                          aria-label={labels[key]}
+                          value={settings[key as keyof typeof defaultSettings]}
+                          onChange={(e) =>
+                            setSettings({ ...settings, [key]: e.target.value })
+                          }
+                        />
+                        <code>
+                          {settings[
+                            key as keyof typeof defaultSettings
+                          ].toUpperCase()}
+                        </code>
+                      </span>
+                      {key === "accent_color" && (
+                        <span className="settings-color-help">
+                          Color de los textos y enlaces destacados, como
+                          “Conocer colección” y “Leer noticia”. También se
+                          aplica a los detalles destacados de la tienda.
+                        </span>
+                      )}
+                    </>
                   ) : (
                     <input
                       name={key}
                       type={
-                        key.endsWith("_color")
-                          ? "color"
+                        key === "whatsapp"
+                          ? "tel"
                           : key.endsWith("_url")
                             ? "url"
                             : "text"
@@ -107,6 +133,15 @@ export function SiteSettingsForm() {
                         setSettings({ ...settings, [key]: e.target.value })
                       }
                     />
+                  )}
+                  {key === "whatsapp" && (
+                    <span className="settings-color-help">
+                      Este número recibe los pedidos y las consultas del botón
+                      Contacto, debajo de Ver ubicación en el inicio. Usá solo
+                      dígitos, sin espacios ni guiones. El mensaje de contacto
+                      es: “Hola, me gustaría contactarme con la Fábrica de
+                      Alfombras - Catamarca. Gracias”.
+                    </span>
                   )}
                 </label>
               ))}

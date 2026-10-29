@@ -12,8 +12,8 @@
     color: var(--ink, #101128);
     --blue: #1595db;
     --red: #fc1646;
-    --pink: #ed8023;
-    --orange: #ed8023;
+    --pink: var(--accent, #ed8023);
+    --orange: var(--accent, #ed8023);
     font-family: Arial, Helvetica, sans-serif;
   }
   .mobile-menu {
@@ -84,7 +84,7 @@
     line-height: 1.2;
   }
   .admin-shell a:focus-visible {
-    outline: 3px solid #ed8023;
+    outline: 3px solid var(--accent, #ed8023);
   }
   .data-table {
     width: 100%;
@@ -113,6 +113,32 @@
     max-height: 600px;
     overflow: auto;
   }
+  .settings-color-control {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .content-form .settings-color-control input[type="color"] {
+    width: 84px;
+    height: 48px;
+    min-height: 48px;
+    padding: 4px;
+    flex: 0 0 84px;
+    background: #fff;
+    cursor: pointer;
+  }
+  .settings-color-control code {
+    font-family: monospace;
+    font-size: 15px;
+    letter-spacing: 0.03em;
+  }
+  .settings-color-help {
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 1.5;
+    text-transform: none;
+    color: #676775;
+  }
   .content-preview h2 {
     font-size: 28px;
   }
@@ -125,7 +151,39 @@
   .preview-panel {
     margin: 20px 0;
   }
+  .factory-contact-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .factory-contact-actions .light-button {
+    margin: 0;
+    box-sizing: border-box;
+    width: 160px;
+    max-width: 100%;
+    min-height: 54px;
+    align-items: center;
+    justify-content: center;
+  }
+  .home-collections .guest-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+  }
+  .home-collections .guest-card-link {
+    display: flex;
+    flex-direction: column;
+  }
+  .home-collections .guest-card-link h3 {
+    margin-top: auto;
+    padding-top: 18px;
+  }
   @media (max-width: 1000px) {
+    .home-collections .guest-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
     .nav-links {
       display: none;
     }
@@ -156,6 +214,9 @@
     }
   }
   @media (max-width: 700px) {
+    .home-collections .guest-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
     .hero h1 {
       font-size: clamp(38px, 11vw, 74px);
     }
