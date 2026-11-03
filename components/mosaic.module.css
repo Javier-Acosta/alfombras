@@ -4,13 +4,6 @@
 .heading {
   margin-bottom: 30px;
 }
-.eyebrow {
-  color: var(--accent, #ed8023);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.18em;
-  margin-bottom: 14px;
-}
 .heading h2 {
   font-size: clamp(36px, 5vw, 64px);
   line-height: 1.04;

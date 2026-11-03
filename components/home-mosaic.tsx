@@ -46,7 +46,6 @@ export async function HomeMosaic() {
       id="piezas-destacadas"
     >
       <div className={styles.heading}>
-        <p className={styles.eyebrow}>SELECCIÓN DE LA FÁBRICA</p>
         <h2 id="home-mosaic-title">{config.title}</h2>
       </div>
       <MosaicGrid items={items} />
